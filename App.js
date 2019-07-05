@@ -14,7 +14,7 @@ export default class App extends React.Component {
       long: true,
       text: "",
 
-      minutesWork: 20,
+      minutesWork: 25,
       secondsWork: 0,
       minutesBreak: 5,
       secondsBreak: 0,
@@ -156,18 +156,12 @@ export default class App extends React.Component {
     }
 
     return (
-
-
       <View style={styles.appContainer} >
-
         <Text style={styles.title}>Pomodoro Timer</Text>
-
 
         {/* Toggles between work and break label */}
         {this.state.long && <Text style={styles.subtitle}>Work</Text>}
         {!this.state.long && <Text style={styles.subtitle}>Break</Text>}
-
-
 
         {/* Toggles between work and break timers */}
         <Switch

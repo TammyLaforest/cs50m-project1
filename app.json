@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "project1",
-    "slug": "project1",
+    "name": "Pomodoro Timer",
+    "slug": "pomodoro-timer",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -24,6 +24,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "Pomodoro Method Timer",
+    "githubUrl": "https://github.com/TammyLaforest/cs50m-project1"
   }
 }
