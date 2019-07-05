@@ -12,10 +12,23 @@ export default class App extends React.Component {
     this.state = {
       stop: true,
       long: true,
+
+      minutesWork: 20,
+      secondsWork: 0,
+      minutesWorkCount: 20,
+      secondsWorkCount: 0,
+      textMinutesWork: "",
+      textSecondsWork: "",
+
+      minutesBreak: 5,
+      secondsBreak: 0,
+      minutesBreakCount: 5,
+      secondsBreakCount: 0,
+      textMinutesBreak: "",
+      textSecondsBreak: "",
+
       minutes: 20,
       seconds: 0,
-      textMinutes: "",
-      textSeconds: ""
     }
   }
 
@@ -38,8 +51,10 @@ export default class App extends React.Component {
     else {
       theInterval = setInterval(this.inc, 1000)
       this.setState({
-        textMinutes: "",
-        textSeconds: ""
+        textMinutesWork: "",
+        textSecondsWork: "",
+        textMinutesBreak: "",
+        textSecondsBreak: "",
       })
     }
   }
@@ -51,20 +66,20 @@ export default class App extends React.Component {
     // Reset the work timer
     if (this.state.long) {
       this.setState(state => ({
-        minutes: 20,
-        seconds: 0,
-        textMinutes: "",
-        textSeconds: "",
+        minutesWorkCount: this.state.minutesWork,
+        secondsWorkCount: this.state.secondsWork,
+        textMinutesWork: "",
+        textSecondsWork: "",
         stop: true
       }))
     }
     // Or Reset the break timer
     else {
       this.setState(state => ({
-        minutes: 5,
-        seconds: 0,
-        textMinutes: "",
-        textSeconds: "",
+        minutesBreakCount: this.state.minutesBreak,
+        secondsBreakCount: this.state.secondsBreak,
+        textMinutesBreak: "",
+        textSecondsBreak: "",
         stop: true
       }))
     }
@@ -105,21 +120,23 @@ export default class App extends React.Component {
 
     this.setState(prevState => ({
       long: !prevState.long,
-      textMinutes: "",
-      textSeconds: ""
+      textMinutesWork: "",
+      textSecondsWork: "",
+      textMinutesBreak: "",
+      textSecondsBreak: "",
     }));
     // Resets to break timer
     if (this.state.long) {
       this.setState({
-        minutes: 5,
-        seconds: 0
+        minutes: this.state.minutesBreak,
+        seconds: this.state.secondsBreak
       })
     }
     // Resets to work timer
     else {
       this.setState({
-        minutes: 20,
-        seconds: 0
+        minutes: this.state.minutesWork,
+        seconds: this.state.secondsWork
       })
     }
   }
@@ -177,14 +194,28 @@ export default class App extends React.Component {
           />
         </View>
 
-        {/* Displays time remaining */}
-        <Text style={styles.numbers}>
-          {textMinutes}:{textSeconds}
-        </Text>
+
+
+
 
         {/* Toggles between work and break labels */}
-        {this.state.long && <Text >Switch to Break</Text>}
-        {!this.state.long && <Text >Switch to Work</Text>}
+        {this.state.long
+
+          &&
+
+          (<Text style={styles.numbers}>
+            {textMinutes}:{textSeconds}
+          </Text>)
+          &&
+
+          <Text >Switch to Break</Text>}
+
+        {!this.state.long &&
+          <Text style={styles.numbers}>
+            {textMinutes}:{textSeconds}
+          </Text>
+          &&
+          <Text >Switch to Work</Text>}
 
         {/* Toggles between work and break timers */}
         <Switch
