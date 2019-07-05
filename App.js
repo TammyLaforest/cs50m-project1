@@ -5,58 +5,55 @@ import { vibrate } from './utils'
 
 export default class App extends React.Component {
 
+
+
   // Stop: is timer going or paused?
   // Long: is this the Work (long) timer or the break timer? 
   constructor(props) {
     super(props)
     this.state = {
-      stop: true,
+      stop: false,
       long: true,
+      text: "",
 
       minutesWork: 20,
       secondsWork: 0,
-      minutesWorkCount: 20,
-      secondsWorkCount: 0,
-      textMinutesWork: "",
-      textSecondsWork: "",
-
       minutesBreak: 5,
       secondsBreak: 0,
-      minutesBreakCount: 5,
-      secondsBreakCount: 0,
-      textMinutesBreak: "",
-      textSecondsBreak: "",
 
       minutes: 20,
       seconds: 0,
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
+
     theInterval = setInterval(this.inc, 1000);
-  }
 
-  // Stops and starts the timer
-  startStopTimer = () => {
-    // Toggle
-    this.setState(state => ({
-      stop: !this.state.stop,
-
-    }))
-    // Stop
-    if (this.state.stop) {
-      clearInterval(theInterval)
-    }
-    // Start
-    else {
-      theInterval = setInterval(this.inc, 1000)
+    if (this.state.long) {
       this.setState({
-        textMinutesWork: "",
-        textSecondsWork: "",
-        textMinutesBreak: "",
-        textSecondsBreak: "",
+        minutes: this.state.minutesWork,
+        seconds: this.state.secondsWork,
+      })
+    } else {
+      this.setState({
+        minutes: this.state.minutesBreak,
+        seconds: this.state.secondsBreak,
       })
     }
+  }
+
+  componentDidMount() {
+    clearInterval(theInterval)
+  }
+
+
+  // Toggles long and short timer
+  // Callback function to ensure state changes before reset
+  longShortTimer = () => {
+    this.setState(prevState => ({
+      long: !prevState.long,
+    }), () => this.resetTimer());
   }
 
   resetTimer = () => {
@@ -66,25 +63,40 @@ export default class App extends React.Component {
     // Reset the work timer
     if (this.state.long) {
       this.setState(state => ({
-        minutesWorkCount: this.state.minutesWork,
-        secondsWorkCount: this.state.secondsWork,
-        textMinutesWork: "",
-        textSecondsWork: "",
-        stop: true
+        minutes: this.state.minutesWork,
+        seconds: this.state.secondsWork,
+        text: "",
+        stop: false
       }))
     }
-    // Or Reset the break timer
+    // Reset the break timer
     else {
       this.setState(state => ({
-        minutesBreakCount: this.state.minutesBreak,
-        secondsBreakCount: this.state.secondsBreak,
-        textMinutesBreak: "",
-        textSecondsBreak: "",
-        stop: true
+        minutes: this.state.minutesBreak,
+        seconds: this.state.secondsBreak,
+        text: "",
+        stop: false
       }))
     }
-    // Start the timer
-    theInterval = setInterval(this.inc, 1000)
+  }
+
+  // Stops and starts the timer
+  startStopTimer = () => {
+    // Toggle
+    this.setState(state => ({
+      stop: !this.state.stop,
+    }))
+    // Stop
+    if (this.state.stop) {
+      clearInterval(theInterval)
+    }
+    // Start
+    else {
+      theInterval = setInterval(this.inc, 1000)
+      this.setState({
+        text: "",
+      })
+    }
   }
 
   // Countdown function
@@ -115,29 +127,17 @@ export default class App extends React.Component {
     }
   }
 
-  // Toggles long and short timer
-  longShortTimer = () => {
-    this.setState(prevState => ({
-      long: !prevState.long,
-      textMinutesWork: "",
-      textSecondsWork: "",
-      textMinutesBreak: "",
-      textSecondsBreak: "",
-    }));
-    // Resets to break timer
-    if (this.state.long) {
-      this.setState({
-        minutes: this.state.minutesBreak,
-        seconds: this.state.secondsBreak
-      })
-    }
-    // Resets to work timer
-    else {
-      this.setState({
-        minutes: this.state.minutesWork,
-        seconds: this.state.secondsWork
-      })
-    }
+  handleText = (text) => {
+    // stop timer
+    clearInterval(theInterval)
+
+    // reset number
+    this.setState({
+      minutes: text,
+      textMinutesWork: text,
+      stop: false
+    })
+
   }
 
   render() {
@@ -152,7 +152,6 @@ export default class App extends React.Component {
     if (this.state.minutes.toString().length < 2) {
       textMinutes = "0" + this.state.minutes.toString()
     }
-
 
     return (
       <View style={styles.appContainer} >
@@ -194,7 +193,7 @@ export default class App extends React.Component {
         </View>
 
 
-        <Text style={styles.numbers}>
+        <Text style={styles.numbers} >
           {textMinutes}:{textSeconds}
         </Text>
 
@@ -214,23 +213,11 @@ export default class App extends React.Component {
 
           <TextInput
             style={styles.inputContainer}
-            value={this.state.textMinutesWork}
+            value={this.state.text}
             placeholder="MM"
             name="minutes"
             keyboardType='numeric'
-            onChangeText={(text) => {
-
-              // stop timer
-              clearInterval(theInterval)
-
-              // reset number
-              this.setState({
-                minutes: text,
-                textMinutesWork: text,
-                stop: false
-              })
-            }
-            }
+            onChangeText={(text) => this.handleText(text)}
             maxLength={4}
           />
           <TextInput
