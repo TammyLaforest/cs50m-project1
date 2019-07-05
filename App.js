@@ -14,9 +14,9 @@ export default class App extends React.Component {
       long: true,
       text: "",
 
-      minutesWork: 0,
-      secondsWork: 10,
-      minutesBreak: 1,
+      minutesWork: 20,
+      secondsWork: 0,
+      minutesBreak: 5,
       secondsBreak: 0,
 
       minutes: 20,
