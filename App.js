@@ -10,8 +10,8 @@ export default class App extends React.Component {
     this.state = {
       stop: true,
       long: true,
-      minutes: 20,
-      seconds: 0
+      minutes: 0,
+      seconds: 5
     }
   }
 
@@ -33,39 +33,40 @@ export default class App extends React.Component {
   }
 
   resetTimer = () => {
+    clearInterval(theInterval)
     if (this.state.long) {
       this.setState(state => ({
-        stop: true,
         minutes: 20,
-        seconds: 0
+        seconds: 0,
+        stop: true
       }))
     }
     else {
       this.setState(state => ({
-        stop: true,
         minutes: 5,
-        seconds: 0
+        seconds: 0,
+        stop: true
       }))
     }
-    this.setState({
-      stop: false
-    })
+    theInterval = setInterval(this.inc, 1000)
+
   }
-
-
 
   // Countdown function
   inc = () => {
     // Is timer at 00?
-    if (this.state.seconds == 1 && this.state.minutes == 0) {
-      vibrate()
-    }
     if (this.state.seconds == 0 && this.state.minutes == 0) {
-      // vibrate()
-      clearInterval(theInterval)
+      vibrate()
+      // Toggle
       this.setState(prevState => ({
-        stop: !prevState.stop
+        long: !prevState.long
       }));
+      // Reset 
+      this.resetTimer()
+
+
+
+
     }
     // counts down seconds
     else if (this.state.seconds > 0) {
@@ -116,24 +117,48 @@ export default class App extends React.Component {
     // if (this.state.long) {
     return (
       <View style={styles.appContainer} >
+
         <Text style={styles.title}>Pomodoro Timer</Text>
+
         {this.state.long && <Text style={styles.subtitle}>Work</Text>}
         {!this.state.long && <Text style={styles.subtitle}>Break</Text>}
-        {/* show if timer running */}
-        {this.state.stop && <Button
-          title="stop"
-          onPress={this.startStopTimer}
-        />}
-        {/* show if timer stopped at 0 */}
-        {!this.state.stop && this.state.seconds == 0 && this.state.minutes == 0 && <Button
+
+        <View style={styles.buttonGroup}>
+
+          {/* show if timer running */}
+          {this.state.stop && <Button
+            title="stop"
+            onPress={this.startStopTimer}
+            type="outline"
+            color='gray'
+            raised='true'
+          />}
+
+          {/* show if timer stopped at more than 0 */}
+          {!this.state.stop && (this.state.seconds > 0 || this.state.minutes > 0) && <Button
+            title="start"
+            onPress={this.startStopTimer}
+            type="outline"
+            color='gray'
+            raised='true'
+          />}
+
+
+          {/* always show reset button */}
+          <Button
+            title="reset"
+            onPress={this.resetTimer}
+            type='outline'
+            color='gray'
+            raised='true'
+          />
+
+          {/* show if timer stopped at 0 */}
+          {/* {!this.state.stop && this.state.seconds == 0 && this.state.minutes == 0 && <Button
           title="reset"
           onPress={this.resetTimer}
-        />}
-        {/* show if timer stopped at more than 0 */}
-        {!this.state.stop && (this.state.seconds > 0 || this.state.minutes > 0) && <Button
-          title="start"
-          onPress={this.startStopTimer}
-        />}
+        />} */}
+        </View>
 
         {/* <View style={styles.inputBox}>
             <TextInput
@@ -198,6 +223,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
   },
+
+  buttonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
   count: {
     fontSize: 42,
     alignItems: 'center',
