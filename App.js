@@ -5,20 +5,18 @@ import { vibrate } from './utils'
 
 export default class App extends React.Component {
 
-
-
   // Stop: is timer going or paused?
   // Long: is this the Work (long) timer or the break timer? 
   constructor(props) {
     super(props)
     this.state = {
-      stop: false,
+      stop: true,
       long: true,
       text: "",
 
-      minutesWork: 20,
-      secondsWork: 0,
-      minutesBreak: 5,
+      minutesWork: 0,
+      secondsWork: 10,
+      minutesBreak: 1,
       secondsBreak: 0,
 
       minutes: 20,
@@ -44,7 +42,8 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    clearInterval(theInterval)
+
+    // clearInterval(theInterval)
   }
 
 
@@ -66,7 +65,7 @@ export default class App extends React.Component {
         minutes: this.state.minutesWork,
         seconds: this.state.secondsWork,
         text: "",
-        stop: false
+        stop: true
       }))
     }
     // Reset the break timer
@@ -75,9 +74,12 @@ export default class App extends React.Component {
         minutes: this.state.minutesBreak,
         seconds: this.state.secondsBreak,
         text: "",
-        stop: false
+        stop: true
       }))
     }
+
+    // Restart timer
+    theInterval = setInterval(this.inc, 1000)
   }
 
   // Stops and starts the timer
@@ -154,13 +156,28 @@ export default class App extends React.Component {
     }
 
     return (
+
+
       <View style={styles.appContainer} >
 
         <Text style={styles.title}>Pomodoro Timer</Text>
 
+
         {/* Toggles between work and break label */}
         {this.state.long && <Text style={styles.subtitle}>Work</Text>}
         {!this.state.long && <Text style={styles.subtitle}>Break</Text>}
+
+
+
+        {/* Toggles between work and break timers */}
+        <Switch
+          onValueChange={this.longShortTimer}
+          value={this.state.long}
+          style={styles.switch} />
+
+        {/* Toggles between work and break labels */}
+        {this.state.long && <Text >Switch to Break</Text>}
+        {!this.state.long && <Text >Switch to Work</Text>}
 
         <View style={styles.buttonGroup}>
 
@@ -198,17 +215,10 @@ export default class App extends React.Component {
         </Text>
 
 
-        {/* Toggles between work and break labels */}
-        {this.state.long && <Text >Switch to Break</Text>}
-        {!this.state.long && <Text>Switch to Work</Text>}
 
-        {/* Toggles between work and break timers */}
-        <Switch
-          onValueChange={this.longShortTimer}
-          value={this.state.long} />
 
         {/* Change timer length with text input */}
-        <Text>Change Work Timer</Text>
+        {/* <Text>Change Work Timer</Text>
         <View style={styles.inputBox}>
 
           <TextInput
@@ -289,7 +299,8 @@ export default class App extends React.Component {
             maxLength={2}
           />
 
-        </View>
+        </View>*/}
+        {/* </View > */}
       </View>
     )
   }
@@ -315,31 +326,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'gainsboro',
+    borderColor: 'gray',
+    borderWidth: 20,
+
   },
   title: {
     color: 'blue',
+    // fontFamily: 'monospace',
     textAlign: 'center',
     fontSize: 35,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 3
-
+    paddingBottom: 100
   },
   subtitle: {
     color: 'black',
+    // fontFamily: 'monospace',
     textAlign: 'center',
     fontSize: 28,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 20
 
   },
-
+  switch: {
+    paddingBottom: 20
+  },
   buttonGroup: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingTop: 20
   },
 
   count: {
@@ -373,9 +389,9 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 1,
-    borderRadius: 4,
-    borderWidth: 1,
+    // margin: 1,
+    borderRadius: 8,
+    borderWidth: 15,
     borderColor: '#d6d7da',
   }
 });
