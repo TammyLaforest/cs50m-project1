@@ -117,7 +117,6 @@ export default class App extends React.Component {
 
   // Toggles long and short timer
   longShortTimer = () => {
-
     this.setState(prevState => ({
       long: !prevState.long,
       textMinutesWork: "",
@@ -195,27 +194,14 @@ export default class App extends React.Component {
         </View>
 
 
-
+        <Text style={styles.numbers}>
+          {textMinutes}:{textSeconds}
+        </Text>
 
 
         {/* Toggles between work and break labels */}
-        {this.state.long
-
-          &&
-
-          (<Text style={styles.numbers}>
-            {textMinutes}:{textSeconds}
-          </Text>)
-          &&
-
-          <Text >Switch to Break</Text>}
-
-        {!this.state.long &&
-          <Text style={styles.numbers}>
-            {textMinutes}:{textSeconds}
-          </Text>
-          &&
-          <Text >Switch to Work</Text>}
+        {this.state.long && <Text >Switch to Break</Text>}
+        {!this.state.long && <Text>Switch to Work</Text>}
 
         {/* Toggles between work and break timers */}
         <Switch
@@ -228,7 +214,7 @@ export default class App extends React.Component {
 
           <TextInput
             style={styles.inputContainer}
-            value={this.state.textMinutes}
+            value={this.state.textMinutesWork}
             placeholder="MM"
             name="minutes"
             keyboardType='numeric'
@@ -240,7 +226,7 @@ export default class App extends React.Component {
               // reset number
               this.setState({
                 minutes: text,
-                textMinutes: text,
+                textMinutesWork: text,
                 stop: false
               })
             }
@@ -249,7 +235,7 @@ export default class App extends React.Component {
           />
           <TextInput
             style={styles.inputContainer}
-            value={this.state.textSeconds}
+            value={this.state.textSecondsWork}
             placeholder="SS"
             name="seconds"
             keyboardType='numeric'
@@ -261,7 +247,7 @@ export default class App extends React.Component {
               // reset number
               this.setState({
                 seconds: text,
-                textSeconds: text,
+                textSecondsWork: text,
                 stop: false
               })
             }
@@ -275,7 +261,7 @@ export default class App extends React.Component {
 
           <TextInput
             style={styles.inputContainer}
-            value={this.state.textMinutes}
+            value={this.state.textMinutesBreak}
             placeholder="MM"
             name="minutes"
             keyboardType='numeric'
@@ -287,7 +273,7 @@ export default class App extends React.Component {
               // reset number
               this.setState({
                 minutes: text,
-                textMinutes: text,
+                textMinutesBreak: text,
                 stop: false
               })
             }
@@ -296,7 +282,7 @@ export default class App extends React.Component {
           />
           <TextInput
             style={styles.inputContainer}
-            value={this.state.textSeconds}
+            value={this.state.textSecondsBreak}
             placeholder="SS"
             name="seconds"
             keyboardType='numeric'
@@ -308,7 +294,7 @@ export default class App extends React.Component {
               // reset number
               this.setState({
                 seconds: text,
-                textSeconds: text,
+                textSecondsBreak: text,
                 stop: false
               })
             }
